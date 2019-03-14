@@ -1,4 +1,6 @@
-# athena-sg-analyser
+# AWS Athena Security Group Analyser
+
+Athena SQL queries used to examine EC2 Security Group edits
 
 ```sql
 CREATE DATABASE IF NOT EXISTS cloudtraildb
