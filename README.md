@@ -2,12 +2,16 @@
 
 Athena SQL queries used to examine EC2 Security Group edits
 
+Note: Update and replace the S3 bucket name before running the following query
+
 ```sql
 CREATE DATABASE IF NOT EXISTS cloudtraildb
     COMMENT 'CloudTrail Database'
     LOCATION 's3://cloudtrails3bucket123/AWSLogs'
     WITH DBPROPERTIES ('Creator'='Jeremy Cook', 'Company'='CloudAcademy', 'Created'='2019')
 ```
+
+Note: Update and replace the S3 bucket name before running the following query
 
 ```sql
 CREATE EXTERNAL TABLE cloudtraildb.cloudtrail_logs (
@@ -44,6 +48,8 @@ LOCATION
   's3://cloudtrails3bucket123/AWSLogs'
 ```
 
+Note: New events may not show up immediately due to the latency in CloudTrail publishing logs into the configured S3 bucket
+
 ```sql
 SELECT * FROM cloudtraildb.cloudtrail_logs limit 10;
 ```
@@ -57,6 +63,8 @@ SELECT eventname,
 FROM cloudtraildb.cloudtrail_logs
 ```
 
+Note: Update and replace the EC2 security group identifier before running the following query
+
 ```sql
 SELECT eventname,
         useridentity.username,
@@ -67,6 +75,8 @@ FROM cloudtraildb.cloudtrail_logs
 WHERE (requestparameters LIKE '%sg-08f82acf7f206bd01%')
 ORDER BY eventtime ASC
 ```
+
+Note: Update and replace the EC2 security group identifier before running the following query
 
 ```sql
 SELECT eventname,
@@ -123,6 +133,8 @@ Note: requestparameters in previous query is JSON and when formattted becomes:
 ```
 
 Let's now query and extract attributes of interest from the JSON requestparameters data:
+
+Note: Update and replace the EC2 security group identifier before running the following query
 
 ```sql
 SELECT json_extract_scalar(requestparameters, '$.groupId') AS sg_id,

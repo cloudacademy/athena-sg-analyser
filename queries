@@ -1,9 +1,13 @@
+Note: Update and replace the S3 bucket name before running the following query
+
 CREATE DATABASE IF NOT EXISTS cloudtraildb
     COMMENT 'CloudTrail Database'
     LOCATION 's3://cloudtrails3bucket123/AWSLogs'
     WITH DBPROPERTIES ('Creator'='Jeremy Cook', 'Company'='CloudAcademy', 'Created'='2019')
 
 =========================================
+
+Note: Update and replace the S3 bucket name before running the following query
 
 CREATE EXTERNAL TABLE cloudtraildb.cloudtrail_logs (
   eventversion STRING,
@@ -40,6 +44,8 @@ LOCATION
 
 =========================================
 
+Note: New events may not show up immediately due to the latency in CloudTrail publishing logs into the configured S3 bucket
+
 SELECT * FROM cloudtraildb.cloudtrail_logs limit 10;
 
 =========================================
@@ -53,6 +59,8 @@ FROM cloudtraildb.cloudtrail_logs
 
 =========================================
 
+Note: Update and replace the EC2 security group identifier before running the following query
+
 SELECT eventname,
         useridentity.username,
         sourceipaddress,
@@ -63,6 +71,8 @@ WHERE (requestparameters LIKE '%sg-08f82acf7f206bd01%')
 ORDER BY eventtime ASC
 
 =========================================
+
+Note: Update and replace the EC2 security group identifier before running the following query
 
 SELECT eventname,
         useridentity.username,
@@ -117,6 +127,8 @@ Note: requestparameters in previous query is JSON and when formattted becomes:
 }
 
 Let's now query and extract attributes of interest from the JSON requestparameters data:
+
+Note: Update and replace the EC2 security group identifier before running the following query
 
 SELECT json_extract_scalar(requestparameters, '$.groupId') AS sg_id,
        json_extract_scalar(i.item,'$.ipProtocol') AS ipProtocol,
