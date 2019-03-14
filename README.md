@@ -7,8 +7,6 @@ CREATE DATABASE IF NOT EXISTS cloudtraildb
     WITH DBPROPERTIES ('Creator'='Jeremy Cook', 'Company'='CloudAcademy', 'Created'='2019')
 ```
 
-=========================================
-
 ```sql
 CREATE EXTERNAL TABLE cloudtraildb.cloudtrail_logs (
   eventversion STRING,
@@ -44,13 +42,9 @@ LOCATION
   's3://cloudtrails3bucket123/AWSLogs'
 ```
 
-=========================================
-
 ```sql
 SELECT * FROM cloudtraildb.cloudtrail_logs limit 10;
 ```
-
-=========================================
 
 ```sql
 SELECT eventname,
@@ -60,8 +54,6 @@ SELECT eventname,
         requestparameters
 FROM cloudtraildb.cloudtrail_logs
 ```
-
-=========================================
 
 ```sql
 SELECT eventname,
@@ -73,8 +65,6 @@ FROM cloudtraildb.cloudtrail_logs
 WHERE (requestparameters LIKE '%sg-08f82acf7f206bd01%')
 ORDER BY eventtime ASC
 ```
-
-=========================================
 
 ```sql
 SELECT eventname,
@@ -87,8 +77,6 @@ WHERE (requestparameters LIKE '%sg-08f82acf7f206bd01%')
 AND eventname = 'AuthorizeSecurityGroupIngress'
 ORDER BY eventtime ASC
 ```
-
-=========================================
 
 Note: requestparameters in previous query is JSON and when formattted becomes:
 
@@ -147,13 +135,9 @@ WHERE (requestparameters LIKE '%sg-08f82acf7f206bd01%')
 AND eventname = 'AuthorizeSecurityGroupIngress'
 ```
 
-=========================================
-
 ```sql
 DROP TABLE cloudtrail_logs
 ```
-
-=========================================
 
 ```sql
 DROP DATABASE cloudtraildb
