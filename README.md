@@ -9,6 +9,7 @@ CREATE DATABASE IF NOT EXISTS cloudtraildb
 
 =========================================
 
+```sql
 CREATE EXTERNAL TABLE cloudtraildb.cloudtrail_logs (
   eventversion STRING,
   useridentity STRUCT<type:STRING,principalid:STRING,arn:STRING,accountid:STRING,invokedby:STRING,accesskeyid:STRING,username:STRING,sessioncontext:struct<attributes:STRUCT<mfaauthenticated:STRING,creationdate:STRING>,sessionissuer:struct<type:STRING,principalid:STRING,arn:STRING,accountid:STRING,username:STRING>>>,
@@ -41,22 +42,28 @@ OUTPUTFORMAT
   'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
 LOCATION
   's3://cloudtrails3bucket123/AWSLogs'
+```
 
 =========================================
 
+```sql
 SELECT * FROM cloudtraildb.cloudtrail_logs limit 10;
+```
 
 =========================================
 
+```sql
 SELECT eventname,
         useridentity.username,
         sourceipaddress,
         eventtime,
         requestparameters
 FROM cloudtraildb.cloudtrail_logs
+```
 
 =========================================
 
+```sql
 SELECT eventname,
         useridentity.username,
         sourceipaddress,
@@ -65,9 +72,11 @@ SELECT eventname,
 FROM cloudtraildb.cloudtrail_logs
 WHERE (requestparameters LIKE '%sg-08f82acf7f206bd01%')
 ORDER BY eventtime ASC
+```
 
 =========================================
 
+```sql
 SELECT eventname,
         useridentity.username,
         sourceipaddress,
@@ -77,11 +86,13 @@ FROM cloudtraildb.cloudtrail_logs
 WHERE (requestparameters LIKE '%sg-08f82acf7f206bd01%')
 AND eventname = 'AuthorizeSecurityGroupIngress'
 ORDER BY eventtime ASC
+```
 
 =========================================
 
 Note: requestparameters in previous query is JSON and when formattted becomes:
 
+```json
 {
   "groupId": "sg-08f82acf7f206bd01",
   "ipPermissions": {
@@ -119,9 +130,11 @@ Note: requestparameters in previous query is JSON and when formattted becomes:
     ]
   }
 }
+```
 
 Let's now query and extract attributes of interest from the JSON requestparameters data:
 
+```sql
 SELECT json_extract_scalar(requestparameters, '$.groupId') AS sg_id,
        json_extract_scalar(i.item,'$.ipProtocol') AS ipProtocol,
        json_extract_scalar(i.item,'$.fromPort') AS fromPort,
@@ -132,11 +145,16 @@ FROM cloudtraildb.cloudtrail_logs
         AS ARRAY(JSON))) AS i (item)
 WHERE (requestparameters LIKE '%sg-08f82acf7f206bd01%')
 AND eventname = 'AuthorizeSecurityGroupIngress'
+```
 
 =========================================
 
+```sql
 DROP TABLE cloudtrail_logs
+```
 
 =========================================
 
+```sql
 DROP DATABASE cloudtraildb
+```
